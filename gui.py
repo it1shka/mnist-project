@@ -14,7 +14,7 @@ def dist(x1, y1, x2, y2):
   return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
 
 # loading convoltuional network 9887
-model = torch.load('./models/model_9887.pth')
+model = torch.load('./models/model_9820.pth')
 font = pygame.font.SysFont('Arial', 34)
 
 def update():

@@ -31,7 +31,6 @@ class ConvolutionNetwork(nn.Module):
       # convolutional part
       nn.Conv2d(1, 32, kernel_size=3, stride=3),
       nn.ReLU(),
-      nn.Dropout(0.1),
       nn.Conv2d(32, 64, kernel_size=3, stride=1),
       nn.ReLU(),
       nn.MaxPool2d(kernel_size=2)
@@ -40,13 +39,15 @@ class ConvolutionNetwork(nn.Module):
       # dense part
       nn.Linear(576, 128),
       nn.ReLU(),
+      nn.Dropout(0.2),
       nn.Linear(128, 10)
     )
     self.output_function = nn.Softmax(dim=1)
+    self.flatten = nn.Flatten()
   
   def forward(self, x):
     x = self.convolution_stack(x)
-    x = x.view(x.size(0), -1)
+    x = self.flatten(x)
     x = self.dense_stack(x)
     x = self.output_function(x)
     return x
