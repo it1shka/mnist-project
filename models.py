@@ -29,25 +29,51 @@ class ConvolutionNetwork(nn.Module):
     super().__init__()
     self.convolution_stack = nn.Sequential(
       # convolutional part
-      nn.Conv2d(1, 32, kernel_size=3, stride=3),
+      nn.Conv2d(1, 10, kernel_size=3),
       nn.ReLU(),
-      nn.Conv2d(32, 64, kernel_size=3, stride=1),
+      nn.Conv2d(10, 20, kernel_size=3),
       nn.ReLU(),
       nn.MaxPool2d(kernel_size=2)
     )
     self.dense_stack = nn.Sequential(
       # dense part
-      nn.Linear(576, 128),
+      nn.Linear(2880, 128),
       nn.ReLU(),
-      nn.Dropout(0.2),
-      nn.Linear(128, 10)
+      nn.Dropout(0.1),
+      nn.Linear(128, 10),
+      nn.Softmax(dim=1)
     )
-    self.output_function = nn.Softmax(dim=1)
     self.flatten = nn.Flatten()
   
   def forward(self, x):
     x = self.convolution_stack(x)
     x = self.flatten(x)
     x = self.dense_stack(x)
-    x = self.output_function(x)
+    return x
+
+class CNN(nn.Module):
+  '''Network created with some help'''
+  def __init__(self):
+    super().__init__()
+    self.convolution_stack = nn.Sequential(
+      nn.Conv2d(1, 32, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.Conv2d(32, 64, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(kernel_size=2),
+      nn.Dropout2d(0.25)
+    )
+    self.flatten = nn.Flatten()
+    self.dense_stack = nn.Sequential (
+      nn.Linear(64 * 14 * 14, 128),
+      nn.ReLU(),
+      nn.Dropout(0.5),
+      nn.Linear(128, 10),
+      nn.Softmax(dim=1)
+    )
+
+  def forward(self, x):
+    x = self.convolution_stack(x)
+    x = self.flatten(x)
+    x = self.dense_stack(x)
     return x
