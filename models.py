@@ -22,3 +22,31 @@ class DenseNetwork(nn.Module):
     x = self.output_layer(x)
     x = self.output_function(x)
     return x
+
+class ConvolutionNetwork(nn.Module):
+  '''Network with convolutional layers'''
+  def __init__(self):
+    super().__init__()
+    self.convolution_stack = nn.Sequential(
+      # convolutional part
+      nn.Conv2d(1, 32, kernel_size=3, stride=3),
+      nn.ReLU(),
+      nn.Dropout(0.1),
+      nn.Conv2d(32, 64, kernel_size=3, stride=1),
+      nn.ReLU(),
+      nn.MaxPool2d(kernel_size=2)
+    )
+    self.dense_stack = nn.Sequential(
+      # dense part
+      nn.Linear(576, 128),
+      nn.ReLU(),
+      nn.Linear(128, 10)
+    )
+    self.output_function = nn.Softmax(dim=1)
+  
+  def forward(self, x):
+    x = self.convolution_stack(x)
+    x = x.view(x.size(0), -1)
+    x = self.dense_stack(x)
+    x = self.output_function(x)
+    return x
