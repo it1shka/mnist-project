@@ -1,3 +1,6 @@
+# this is a preview of pure dense network
+# the model is trained with 97.97% accuracy
+
 import pygame
 import torch
 from torchvision.datasets import MNIST

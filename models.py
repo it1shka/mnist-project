@@ -1,3 +1,5 @@
+# All my models are stored here
+
 from torch import nn
 
 class DenseNetwork(nn.Module):
@@ -77,3 +79,30 @@ class CNN(nn.Module):
     x = self.flatten(x)
     x = self.dense_stack(x)
     return x
+
+class DigitRecognitionCNN(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.extraction_base = nn.Sequential(
+      nn.Conv2d(1, 32, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(kernel_size=2, stride=2),
+      nn.Conv2d(32, 64, kernel_size=3, padding=1),
+      nn.ReLU(),
+      nn.MaxPool2d(kernel_size=2, stride=2),
+    )
+    self.flatten = nn.Flatten()
+    self.classification_head = nn.Sequential(
+      nn.Linear(64 * 7 * 7, 128),
+      nn.ReLU(),
+      nn.Dropout(0.1),
+      nn.Linear(128, 10),
+    )
+    self.softmax = nn.Softmax(dim=1)
+  
+  def forward(self, x):
+    x = self.extraction_base(x)
+    x = self.flatten(x)
+    x = self.classification_head(x)
+    return self.softmax(x)
+  

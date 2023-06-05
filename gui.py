@@ -1,3 +1,5 @@
+# GUI uses CNN model
+
 import pygame
 import torch
 from models import *
@@ -13,8 +15,9 @@ image_tensor = torch.zeros((28, 28))
 def dist(x1, y1, x2, y2):
   return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
 
-# loading convoltuional network 9887
-model = torch.load('./models/model_9895.pth')
+# loading convoltuional network
+MODEL_NAME = 'model_9901.pth'
+model = torch.load(f'./models/{MODEL_NAME}')
 font = pygame.font.SysFont('Arial', 34)
 
 def update():
